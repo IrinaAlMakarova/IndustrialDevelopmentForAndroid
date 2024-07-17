@@ -6,6 +6,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import ru.netology.nmedia.activity.FeedFragment
 import ru.netology.nmedia.dto.Post
 import java.util.concurrent.TimeUnit
 
@@ -35,8 +36,30 @@ class PostRepositoryImpl: PostRepository {
             }
     }
 
-    override fun likeById(id: Long) {
-        // TODO: do this in homework
+
+    override fun likeById(id: Long, likedByMe: Boolean) {
+        if(likedByMe==true){
+            // Формируем запрос к серверу на добавление лайка
+            val request: Request = Request.Builder() //Добавление лайка: POST /api/posts/{id}/likes
+                .url("${BASE_URL}/api/slow/posts/$id/likes")
+                .build()
+
+            // Отправка запроса
+            client.newCall(request)
+                .execute()
+                .close()
+        }else{
+            // Формируем запрос к серверу на удаление лайка
+            val request: Request = Request.Builder() //Удаление лайка: DELETE /api/posts/{id}/likes
+                .delete()
+                .url("${BASE_URL}/api/slow/posts/$id/likes")
+                .build()
+
+            // Отправка запроса
+            client.newCall(request)
+                .execute()
+                .close()
+        }
     }
 
     override fun save(post: Post) {

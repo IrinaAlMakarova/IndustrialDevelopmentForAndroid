@@ -25,7 +25,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val data: LiveData<FeedModel>
         get() = _data
     val edited = MutableLiveData(empty)
-    private val _postCreated = SingleLiveEvent<Unit>()
+    private val _postCreated = SingleLiveEvent<Unit>() // Событие о том, что пост добавлен
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
@@ -70,8 +70,25 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = text)
     }
 
-    fun likeById(id: Long) {
-        thread { repository.likeById(id) }
+    fun likeById(id: Long, likedByMe: Boolean) {
+        thread { // Создаем фоновый поток
+            val old = _data.value?.posts.orEmpty()
+            _data.postValue(
+                _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                    .map {
+                        if (it.id != id) it else it.copy(
+                            likedByMe = !it.likedByMe,
+                            likes = if (it.likedByMe) it.likes - 1 else it.likes + 1
+                        )
+                    }
+                )
+            )
+            try {
+                repository.likeById(id, likedByMe) // Обращение к серверу
+            } catch (e: IOException) {
+                _data.postValue(_data.value?.copy(posts = old)) // В случае ошибки - отмена лайка: Передаем старый список постов, сохраненный в переменную
+            }
+        }
     }
 
     fun removeById(id: Long) {
