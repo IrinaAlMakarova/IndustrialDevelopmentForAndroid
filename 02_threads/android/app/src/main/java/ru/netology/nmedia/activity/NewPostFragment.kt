@@ -13,13 +13,10 @@ import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class NewPostFragment : Fragment() {
-
     companion object {
         var Bundle.textArg: String? by StringArg
     }
-
     private val viewModel: PostViewModel by activityViewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,10 +27,8 @@ class NewPostFragment : Fragment() {
             container,
             false
         )
-
         arguments?.textArg
             ?.let(binding.edit::setText)
-
         binding.ok.setOnClickListener {
             viewModel.changeContent(binding.edit.text.toString())
             viewModel.save()
