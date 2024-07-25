@@ -73,8 +73,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     //    edited.value = empty
     //}
     fun save() {
-            edited.value?.let {
-            repository.save(object :GetCallback<Post>{
+        edited.value?.let {
+            repository.save(it, object : GetCallback<Post> {
                 override fun onSuccess(value: Post) {
                     _postCreated.postValue(Unit)
                 }

@@ -145,14 +145,14 @@ class PostRepositoryImpl : PostRepository {
     //        .execute()
     //        .close()
     //}
-    override fun save(callback: GetCallback<Post>) { // Метод отправки поста на сервер
+    override fun save(post: Post, callback: GetCallback<Post>) { // Метод отправки поста на сервер
         val request: Request = Request.Builder()
-            .post(gson.toJson(callback).toRequestBody(jsonType))
+            .post(gson.toJson(post).toRequestBody(jsonType))
             .url("${BASE_URL}/api/slow/posts")
             .build()
 
         client.newCall(request)
-            .enqueue(object :Callback{
+            .enqueue(object : Callback {
                 override fun onResponse(call: Call, response: Response) { //Ответ был получен
                     val post: Post = response
                         .let { it.body?.string() ?: throw RuntimeException("body is null") }
