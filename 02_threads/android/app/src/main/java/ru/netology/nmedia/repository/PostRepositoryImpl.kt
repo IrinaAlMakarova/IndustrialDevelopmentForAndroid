@@ -14,7 +14,6 @@ import okio.IOException
 import ru.netology.nmedia.dto.Post
 import java.util.concurrent.TimeUnit
 
-
 class PostRepositoryImpl : PostRepository {
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
