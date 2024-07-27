@@ -48,25 +48,14 @@ class PostViewHolder(
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
 
-            var picture = ""
-            if (author.text == "Сбер") {
-                picture = "sber"
-            }
-            if (author.text == "Netology") {
-                picture = "netology"
-            }
-            if (author.text == "Тинькофф") {
-                picture = "tcs"
-            }
-            val url = "http://10.0.2.2:9999/avatars/${picture}.jpg"
+            val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
             Glide.with(binding.avatar)
                 .load(url)
-                .transform(RoundedCorners(120))
+                .circleCrop() //.transform(RoundedCorners(120))
                 .placeholder(R.drawable.ic_loading_100dp)
                 .error(R.drawable.ic_error_100dp)
                 .timeout(10_000)
                 .into(binding.avatar)
-
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
