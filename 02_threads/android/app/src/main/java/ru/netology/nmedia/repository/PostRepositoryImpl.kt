@@ -26,6 +26,7 @@ class PostRepositoryImpl : PostRepository {
         private val jsonType = "application/json".toMediaType()
     }
 
+    // Сетевые запросы: Main Thread & Background
     //override fun getAll(): List<Post> { // Синхронный
     //    val request: Request = Request.Builder()
     //        .url("${BASE_URL}/api/slow/posts")
@@ -38,6 +39,9 @@ class PostRepositoryImpl : PostRepository {
     //            gson.fromJson(it, typeToken.type)
     //        }
     //}
+    // Сетевые запросы: Main Thread & Background
+
+    // Современные подходы работы с многопоточностью
     override fun getAll(callback: GetCallback<List<Post>>) { // Асинхронный
         // Формируем запрос на список постов
         val request: Request = Request.Builder()
@@ -61,8 +65,9 @@ class PostRepositoryImpl : PostRepository {
                 }
             })
     }
+    // Современные подходы работы с многопоточностью
 
-
+    // Сетевые запросы: Main Thread & Background
     //override fun likeById(id: Long, likedByMe: Boolean) { // Синхронный
     //    if (likedByMe == true) {
     //        // Формируем запрос к серверу на добавление лайка
@@ -87,6 +92,9 @@ class PostRepositoryImpl : PostRepository {
     //            .close()
     //    }
     //}
+    // Сетевые запросы: Main Thread & Background
+
+    // Современные подходы работы с многопоточностью
     override fun likeById(id: Long, likedByMe: Boolean, callback: GetCallback<Post>) {// Асинхронный
         if (likedByMe == true) {
             // Формируем запрос к серверу на добавление лайка
@@ -132,8 +140,9 @@ class PostRepositoryImpl : PostRepository {
                 })
         }
     }
+    // Современные подходы работы с многопоточностью
 
-
+    // Сетевые запросы: Main Thread & Background
     //override fun save(post: Post) {
     //    val request: Request = Request.Builder()
     //        .post(gson.toJson(post).toRequestBody(jsonType))
@@ -144,6 +153,9 @@ class PostRepositoryImpl : PostRepository {
     //        .execute()
     //        .close()
     //}
+    // Сетевые запросы: Main Thread & Background
+
+    // Современные подходы работы с многопоточностью
     override fun save(post: Post, callback: GetCallback<Post>) { // Метод отправки поста на сервер
         val request: Request = Request.Builder()
             .post(gson.toJson(post).toRequestBody(jsonType))
@@ -164,7 +176,9 @@ class PostRepositoryImpl : PostRepository {
                 }
             })
     }
+    // Современные подходы работы с многопоточностью
 
+    // Сетевые запросы: Main Thread & Background
     //override fun removeById(id: Long) { // Синхронный
     //    val request: Request = Request.Builder()
     //        .delete()
@@ -175,6 +189,9 @@ class PostRepositoryImpl : PostRepository {
     //        .execute()
     //        .close()
     //}
+    // Сетевые запросы: Main Thread & Background
+
+    // Современные подходы работы с многопоточностью
     override fun removeById(id: Long, callback: GetCallback<Unit>) { // Асинхронный
         val request: Request = Request.Builder()
             .delete()
@@ -193,4 +210,5 @@ class PostRepositoryImpl : PostRepository {
                 }
             })
     }
+    // Современные подходы работы с многопоточностью
 }

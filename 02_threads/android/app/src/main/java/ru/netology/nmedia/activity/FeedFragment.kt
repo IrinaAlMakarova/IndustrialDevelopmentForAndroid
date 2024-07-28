@@ -16,10 +16,12 @@ import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
+import ru.netology.nmedia.viewmodel.PostViewModelCrud
 
 class FeedFragment : Fragment() {
 
-    private val viewModel: PostViewModel by activityViewModels()
+    //private val viewModel: PostViewModel by activityViewModels()
+    private val viewModel: PostViewModelCrud by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

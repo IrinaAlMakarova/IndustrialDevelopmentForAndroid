@@ -48,6 +48,7 @@ class PostViewHolder(
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
 
+            // Многопоточность в Android
             val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
             Glide.with(binding.avatar)
                 .load(url)
@@ -56,6 +57,7 @@ class PostViewHolder(
                 .error(R.drawable.ic_error_100dp)
                 .timeout(10_000)
                 .into(binding.avatar)
+            // Многопоточность в Android
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {

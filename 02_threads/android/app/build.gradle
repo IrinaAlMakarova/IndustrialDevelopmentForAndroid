@@ -30,6 +30,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     buildTypes {
@@ -37,6 +38,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders.usesCleartextTraffic = false
+            buildConfigField "String", "BASE_URL", '"https://netomedia.ru"'
         }
         debug {
             manifestPlaceholders.usesCleartextTraffic = true
@@ -64,6 +66,9 @@ dependencies {
 
     def glide_version = "4.16.0"
     def picasso_version = "2.71828"
+
+    def retrofit_version = "2.10.0"
+    def retrofitgson_version = "2.10.0"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "androidx.core:core-ktx:$core_version"
@@ -93,4 +98,10 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     implementation "com.squareup.picasso:picasso:$picasso_version"
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
+
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitgson_version"
+
+    def okhttplogging_version = "4.12.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttplogging_version"
 }
