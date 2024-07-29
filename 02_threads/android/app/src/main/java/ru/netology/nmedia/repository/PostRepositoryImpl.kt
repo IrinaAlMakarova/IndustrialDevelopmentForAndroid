@@ -52,11 +52,9 @@ class PostRepositoryImpl : PostRepository {
             .enqueue(object :
                 Callback { // Ставим запрос в очередь и передаем Callbackна случай успеха и не успеха
                 override fun onResponse(call: Call, response: Response) {
-                    val posts: List<Post> =
-                        response.let { it.body?.string() ?: throw RuntimeException("body is null") }
-                            .let {
-                                gson.fromJson(it, typeToken.type)
-                            }
+                    val posts: List<Post> = response
+                        .let { it.body?.string() ?: throw RuntimeException("body is null") }
+                        .let { gson.fromJson(it, typeToken.type) }
                     callback.onSuccess(posts)
                 }
 

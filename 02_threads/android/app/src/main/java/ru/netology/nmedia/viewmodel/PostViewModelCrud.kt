@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
-import ru.netology.nmedia.repository.GetCallback
 import ru.netology.nmedia.repository.GetCallbackCrud
 import ru.netology.nmedia.repository.PostRepositoryCrud
 import ru.netology.nmedia.repository.PostRepositoryImplCrud
