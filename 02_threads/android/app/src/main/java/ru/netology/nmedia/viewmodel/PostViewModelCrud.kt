@@ -18,9 +18,16 @@ class PostViewModelCrud(application: Application) : AndroidViewModel(application
     val data: LiveData<FeedModel>
         get() = _data
     val edited = MutableLiveData(empty)
+
     private val _postCreated = SingleLiveEvent<Unit>() // Событие о том, что пост добавлен
     val postCreated: LiveData<Unit>
         get() = _postCreated
+
+    // Обработка ошибок
+    private val _singleError = SingleLiveEvent<Unit>() // Событие о том, что произошла ошибка
+    val singleError: LiveData<Unit>
+        get() = _singleError
+    // Обработка ошибок
 
     init {
         loadPosts()
@@ -49,6 +56,7 @@ class PostViewModelCrud(application: Application) : AndroidViewModel(application
                 }
 
                 override fun onError(exception: Throwable) {
+                    _singleError.postValue(Unit) // Обработка ошибок
                 }
             })
         }
@@ -85,6 +93,7 @@ class PostViewModelCrud(application: Application) : AndroidViewModel(application
             }
 
             override fun onError(exception: Throwable) {
+                _singleError.postValue(Unit) // Обработка ошибок
                 _data.postValue(_data.value?.copy(posts = old)) // В случае ошибки - отмена лайка: Передаем старый список постов, сохраненный в переменную
             }
         })
@@ -103,6 +112,7 @@ class PostViewModelCrud(application: Application) : AndroidViewModel(application
             }
 
             override fun onError(exception: Throwable) {
+                _singleError.postValue(Unit) // Обработка ошибок
                 _data.postValue(_data.value?.copy(posts = old))
             }
         })
