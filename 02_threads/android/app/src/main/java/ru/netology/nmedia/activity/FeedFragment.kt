@@ -65,7 +65,7 @@ class FeedFragment : Fragment() {
         }
 
         // Обработка ошибок
-        viewModel.singleError.observe(viewLifecycleOwner){
+        viewModel.singleError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), R.string.error_loading, Toast.LENGTH_LONG).show()
         }
         // Обработка ошибок
