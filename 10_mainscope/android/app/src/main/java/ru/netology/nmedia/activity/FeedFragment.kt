@@ -37,6 +37,10 @@ class FeedFragment : Fragment() {
                 viewModel.likeById(post.id)
             }
 
+            override fun onDisLike(post: Post) {
+                viewModel.dislikeById(post.id)
+            }
+
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
             }

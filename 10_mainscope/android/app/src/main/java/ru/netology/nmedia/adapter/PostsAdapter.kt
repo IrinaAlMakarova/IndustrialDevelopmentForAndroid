@@ -14,6 +14,7 @@ import ru.netology.nmedia.view.loadCircleCrop
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
+    fun onDisLike(post: Post) {}
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
@@ -68,7 +69,23 @@ class PostViewHolder(
             }
 
             like.setOnClickListener {
-                onInteractionListener.onLike(post)
+                if(post.likedByMe==true){
+                    onInteractionListener.onLike(post)
+                }
+                if(post.likedByMe==false){
+                    onInteractionListener.onDisLike(post)
+                }
+
+            }
+
+            like.setOnClickListener {
+                println(like.isChecked)
+                if (like.isChecked==true) {
+                    onInteractionListener.onLike(post)
+                }
+                if (like.isChecked==false){
+                    onInteractionListener.onDisLike(post)
+                }
             }
 
             share.setOnClickListener {
