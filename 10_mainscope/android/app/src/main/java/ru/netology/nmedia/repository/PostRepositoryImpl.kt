@@ -73,8 +73,10 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             }
 
         } catch (e: IOException) {
+            dao.dislikeById(id)
             throw NetworkError
         } catch (e: Exception) {
+            dao.dislikeById(id)
             throw UnknownError
         }
     }
@@ -89,8 +91,10 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             }
 
         } catch (e: IOException) {
+            dao.likeById(id)
             throw NetworkError
         } catch (e: Exception) {
+            dao.likeById(id)
             throw UnknownError
         }
     }
