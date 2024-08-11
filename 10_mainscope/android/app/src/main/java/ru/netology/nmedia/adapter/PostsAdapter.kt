@@ -57,6 +57,7 @@ class PostViewHolder(
                                 onInteractionListener.onRemove(post)
                                 true
                             }
+
                             R.id.edit -> {
                                 onInteractionListener.onEdit(post)
                                 true
@@ -69,10 +70,10 @@ class PostViewHolder(
             }
 
             like.setOnClickListener {
-                if(post.likedByMe==true){
+                if (post.likedByMe == true) {
                     onInteractionListener.onLike(post)
                 }
-                if(post.likedByMe==false){
+                if (post.likedByMe == false) {
                     onInteractionListener.onDisLike(post)
                 }
 
@@ -80,10 +81,10 @@ class PostViewHolder(
 
             like.setOnClickListener {
                 println(like.isChecked)
-                if (like.isChecked==true) {
+                if (like.isChecked == true) {
                     onInteractionListener.onLike(post)
                 }
-                if (like.isChecked==false){
+                if (like.isChecked == false) {
                     onInteractionListener.onDisLike(post)
                 }
             }

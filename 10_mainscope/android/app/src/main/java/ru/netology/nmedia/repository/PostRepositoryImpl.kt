@@ -49,12 +49,13 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun removeById(id: Long) {
         try {
-            val response = PostsApi.service.removeById(id)
+            dao.removeById(id) // Удаление записи из локальной БД
+
+            val response = PostsApi.service.removeById(id)  // Отправка запроса в API (HTTP)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
 
-            dao.removeById(id)
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
@@ -64,34 +65,32 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun likeById(id: Long) {
         try {
-            val response = PostsApi.service.likeById(id)
+            dao.likeById(id) // Модифицикация записи в локальной БД
+
+            val response = PostsApi.service.likeById(id) // Отправка запроса в API (HTTP)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
 
-            dao.likeById(id)
         } catch (e: IOException) {
-            dao.dislikeById(id)
             throw NetworkError
         } catch (e: Exception) {
-            dao.dislikeById(id)
             throw UnknownError
         }
     }
 
     override suspend fun dislikeById(id: Long) {
         try {
-            val response = PostsApi.service.dislikeById(id)
+            dao.dislikeById(id) // Модифицикация записи в локальной БД
+
+            val response = PostsApi.service.dislikeById(id) // Отправка запроса в API (HTTP)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
 
-            dao.dislikeById(id)
         } catch (e: IOException) {
-            dao.likeById(id)
             throw NetworkError
         } catch (e: Exception) {
-            dao.likeById(id)
             throw UnknownError
         }
     }
