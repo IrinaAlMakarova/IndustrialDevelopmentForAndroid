@@ -5,12 +5,24 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.entity.PostEntity
 
 @Dao
 interface PostDao {
-    @Query("SELECT * FROM PostEntity ORDER BY id DESC")
-    fun getAll(): LiveData<List<PostEntity>>
+    ///////////////////////////////////////////////////////
+    //@Query("SELECT * FROM PostEntity ORDER BY id DESC")
+    //fun getAll(): LiveData<List<PostEntity>>
+
+    // Flow
+    // загрузка всех постов - только те, что на экране
+    @Query("SELECT * FROM PostEntity WHERE visibility = 1 ORDER BY id DESC")
+    fun getAll(): Flow<List<PostEntity>>
+
+    // обновление списка постов + вновь загруженные
+    @Query("UPDATE PostEntity SET visibility = 1 WHERE visibility = 0")
+    suspend fun updateNewPosts()
+    ///////////////////////////////////////////////////////
 
     @Query("SELECT COUNT(*) == 0 FROM PostEntity")
     suspend fun isEmpty(): Boolean

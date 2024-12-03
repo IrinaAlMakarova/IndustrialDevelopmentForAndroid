@@ -72,6 +72,33 @@ class FeedFragment : Fragment() {
             binding.emptyText.isVisible = state.empty
         }
 
+        ///////////////////////////////////////
+        // FLOW
+        //viewModel.newPosts.observe(viewLifecycleOwner){
+        //    println(it)
+        //}
+
+        //  изначально кнопка "Свежие записи" невидна
+        binding.newPosts.visibility = View.GONE
+
+         viewModel.newPosts.observe(viewLifecycleOwner){
+            println(it)
+
+            // если новые посты есть, то кнопка "Свежие записи" видна
+            if (it > 0) {
+                binding.newPosts.visibility = View.VISIBLE //видимость элемента - виден
+            }
+        }
+
+        // при нажатии на кнопку "Свежие записи" кнопка исчезает
+        binding.newPosts.setOnClickListener {
+            binding.newPosts.visibility = View.GONE //видимость элемента - невиден
+            binding.list.scrollToPosition(0) //При нажатии на кн. происходит скролл RecyclerView к самому верху
+            viewModel.loadNewPosts()
+        }
+
+        //////////////////////////////////////
+
         binding.swiperefresh.setOnRefreshListener {
             viewModel.refreshPosts()
         }

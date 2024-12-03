@@ -14,6 +14,10 @@ data class PostEntity(
     val published: String,
     val likedByMe: Boolean,
     val likes: Int = 0,
+
+    //////////////////////////////////////////////////
+    // FLOW
+    val visibility: Int = 0 // видимость поста
 ) {
     fun toDto() = Post(id, author, authorAvatar, content, published, likedByMe, likes)
 
@@ -26,7 +30,10 @@ data class PostEntity(
                 dto.content,
                 dto.published,
                 dto.likedByMe,
-                dto.likes
+                dto.likes,
+                //////////////////////////////////////////////////
+                // FLOW
+                dto.visibility, // видимость поста
             )
 
     }

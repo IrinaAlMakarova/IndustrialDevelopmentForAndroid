@@ -1,6 +1,13 @@
 package ru.netology.nmedia.repository
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import okio.IOException
 import ru.netology.nmedia.api.*
 import ru.netology.nmedia.dao.PostDao
@@ -13,7 +20,40 @@ import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.UnknownError
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
-    override val data = dao.getAll().map(List<PostEntity>::toDto)
+    ////////////////////////////////////////////////////////////////
+    //override val data = dao.getAll().map(List<PostEntity>::toDto)
+
+    // Flow
+    override val data = dao.getAll().map{
+        it.map {it.toDto()}
+    }
+
+    override fun getNewer(id: Int): Flow<Int> = flow {
+        while (true){
+            delay(10_000)
+            val response = PostsApi.service.getNewer(id.toLong())
+            if(!response.isSuccessful){
+                throw  ApiError(response.code(), response.message())
+            }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(body.toEntity())
+            emit(body.size)
+        }
+    }
+        .catch { it.printStackTrace() }
+        //.flowOn(Dispatchers.Default)
+
+    override suspend fun getNewPosts(){
+        try {
+            dao.updateNewPosts() // Добавление новых постов (видимы)
+            dao.getAll() // Добавление постов включая новые
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+    ////////////////////////////////////////////////////////////////
 
     override suspend fun getAll() {
         try {
