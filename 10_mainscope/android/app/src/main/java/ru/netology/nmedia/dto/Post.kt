@@ -11,6 +11,6 @@ data class Post(
 
     //////////////////////////////////////////////////
     // FLOW
-    val visibility: Int = 0 // видимость поста
+    val visibility: Int = 1 // видимость поста
 )
 

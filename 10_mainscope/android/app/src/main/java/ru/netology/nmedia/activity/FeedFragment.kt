@@ -81,7 +81,7 @@ class FeedFragment : Fragment() {
         //  изначально кнопка "Свежие записи" невидна
         binding.newPosts.visibility = View.GONE
 
-         viewModel.newPosts.observe(viewLifecycleOwner){
+        viewModel.newPosts.observe(viewLifecycleOwner){
             println(it)
 
             // если новые посты есть, то кнопка "Свежие записи" видна

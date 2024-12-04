@@ -1,6 +1,7 @@
 package ru.netology.nmedia.repository
 
 import androidx.lifecycle.*
+import androidx.room.util.copyAndClose
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -36,17 +37,18 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
                 throw  ApiError(response.code(), response.message())
             }
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(body.toEntity())
+            //dao.insert(body.toEntity())
+            dao.insert(body.toEntity().map {it.copy(visibility = 0)})
+
             emit(body.size)
         }
     }
         .catch { it.printStackTrace() }
-        //.flowOn(Dispatchers.Default)
+        .flowOn(Dispatchers.Default)
 
     override suspend fun getNewPosts(){
         try {
             dao.updateNewPosts() // Добавление новых постов (видимы)
-            dao.getAll() // Добавление постов включая новые
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
@@ -63,7 +65,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             }
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(body.toEntity())
+             dao.insert(body.toEntity())
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
