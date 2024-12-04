@@ -38,13 +38,19 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             }
             val body = response.body() ?: throw ApiError(response.code(), response.message())
             //dao.insert(body.toEntity())
-            dao.insert(body.toEntity().map {it.copy(visibility = 0)})
+            // 1сп.
+            //dao.insert(body.toEntity().map {it.copy(visibility = 0)})
+            // 2сп.
+            dao.backgroundInsert(body.toEntity().map {it.copy(visibility = 0)})
 
             emit(body.size)
         }
     }
         .catch { it.printStackTrace() }
         .flowOn(Dispatchers.Default)
+
+
+
 
     override suspend fun getNewPosts(){
         try {

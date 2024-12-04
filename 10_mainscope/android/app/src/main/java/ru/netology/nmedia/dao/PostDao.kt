@@ -22,16 +22,24 @@ interface PostDao {
     // обновление списка постов + вновь загруженные
     @Query("UPDATE PostEntity SET visibility = 1 WHERE visibility = 0")
     suspend fun updateNewPosts()
+
+    // 2сп.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(post: PostEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(posts: List<PostEntity>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun backgroundInsert(posts: List<PostEntity>)
     ///////////////////////////////////////////////////////
 
     @Query("SELECT COUNT(*) == 0 FROM PostEntity")
     suspend fun isEmpty(): Boolean
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(post: PostEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(posts: List<PostEntity>)
+    // 1сп.
+    //@Insert(onConflict = OnConflictStrategy.REPLACE)
+    //suspend fun insert(post: PostEntity)
+    //@Insert(onConflict = OnConflictStrategy.REPLACE)
+    //suspend fun insert(posts: List<PostEntity>)
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
     suspend fun removeById(id: Long)
