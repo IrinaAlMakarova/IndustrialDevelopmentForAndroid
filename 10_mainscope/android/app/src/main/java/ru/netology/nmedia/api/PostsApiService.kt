@@ -1,5 +1,7 @@
 package ru.netology.nmedia.api
 
+import android.provider.MediaStore.Audio.Media
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -8,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.dto.Post
+import java.io.File
 
 private const val BASE_URL = "${BuildConfig.BASE_URL}/api/slow/"
 
@@ -36,6 +39,13 @@ interface PostsApiService {
     @GET("posts/{id}/newer")
     suspend fun getNewer(@Path("id") id: Long): Response<List<Post>>
     /////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////
+    // IMAGE
+    @Multipart
+    @POST("media")
+    suspend fun upload(@Part file: MultipartBody.Part):Response<Media>
+    /////////////////////////////////////
 
     @GET("posts/{id}")
     suspend fun getById(@Path("id") id: Long): Response<Post>

@@ -3,6 +3,7 @@ package ru.netology.nmedia.repository
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.model.PhotoModel
 
 interface PostRepository {
     ////////////////////////////////////
@@ -16,6 +17,12 @@ interface PostRepository {
 
     suspend fun getAll()
     suspend fun save(post: Post)
+
+    //////////////////////////
+    //IMAGE
+    suspend fun saveWithAttachment(post: Post, photoModel: PhotoModel)
+    //////////////////////////
+
     suspend fun removeById(id: Long)
     suspend fun likeById(id: Long)
     suspend fun dislikeById(id: Long)

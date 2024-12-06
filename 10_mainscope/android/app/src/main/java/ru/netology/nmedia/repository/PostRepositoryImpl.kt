@@ -1,5 +1,6 @@
 package ru.netology.nmedia.repository
 
+import android.provider.MediaStore
 import androidx.lifecycle.*
 import androidx.room.util.copyAndClose
 import kotlinx.coroutines.Dispatchers
@@ -9,9 +10,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okio.IOException
 import ru.netology.nmedia.api.*
 import ru.netology.nmedia.dao.PostDao
+import ru.netology.nmedia.dto.Attachment
+import ru.netology.nmedia.dto.AttachmentType
+import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toDto
@@ -19,6 +25,9 @@ import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.UnknownError
+import ru.netology.nmedia.model.PhotoModel
+import java.io.File
+
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     ////////////////////////////////////////////////////////////////
@@ -62,6 +71,56 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
         }
     }
     ////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////
+    //IMAGE
+    override suspend fun saveWithAttachment(post: Post, photoModel: PhotoModel) {
+        try {
+            val media = upload(photoModel.file)
+            val response = PostsApi.service.save(
+                post.copy(
+                    attachment = Attachment(
+                        url = media.id,
+                        AttachmentType.IMAGE
+                    )
+                )
+            )
+            if(!response.isSuccessful){
+                throw ApiError(response.code(), response.message())
+            }
+
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(PostEntity.fromDto(body))
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
+    private suspend fun upload(file: File): Media {
+        try {
+            val response =  PostsApi.service.upload(
+                MultipartBody.Part.createFormData(
+                "file",
+                    file.name,
+                    file.asRequestBody()
+                )
+            )
+
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+            return (response.body() ?: throw ApiError(response.code(), response.message())) as Media
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+    //////////////////////////
 
     override suspend fun getAll() {
         try {
